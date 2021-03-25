@@ -21,7 +21,7 @@ export default {
         const handleSubmit = async () => {
             await login(email.value, password.value)
             if (!error.value) {
-               context.emit('registration')  
+               context.emit('login')  
             }
         }
 
