@@ -9,7 +9,7 @@ const getCollection = (collection) => {
     let collectionRef = projectFirestore.collection(collection)
       .orderBy('createdAt')
 
-    collectionRef.onSnapshot(() => {
+    collectionRef.onSnapshot((snap) => {
         let results = []
         snap.docs.forEach(doc => {
             
