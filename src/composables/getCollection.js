@@ -1,5 +1,6 @@
 import { ref } from "@vue/reactivity"
 import { projectFirestore } from "@/firebase/config"
+import { watchEffect } from "@vue/runtime-core"
 
 const getCollection = (collection) => {
     // Need to declare these here because they relate to one specific collection
@@ -10,7 +11,7 @@ const getCollection = (collection) => {
       .orderBy('createdAt')
 
     // Takes a snapshot of the current collention  
-    collectionRef.onSnapshot((snap) => {
+    const unsubscribe = collectionRef.onSnapshot((snap) => {
         let results = []
         snap.docs.forEach(doc => {
             
@@ -27,6 +28,11 @@ const getCollection = (collection) => {
         error.value = 'Could not fetch data'
     })
 
+    // The onInvalidate function runs when the component unmounts (when user logs out)
+    watchEffect((onInvalidate) => {
+        // Unsubscribe from previous collection when watcher is stopped (component has unmounted)
+        onInvalidate(() => unsubscribe())
+    })
 
     return { documents, error }
 }
