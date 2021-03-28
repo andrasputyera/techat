@@ -9,6 +9,7 @@ const getCollection = (collection) => {
     let collectionRef = projectFirestore.collection(collection)
       .orderBy('createdAt')
 
+    // Takes a snapshot of the current collention  
     collectionRef.onSnapshot((snap) => {
         let results = []
         snap.docs.forEach(doc => {
@@ -16,6 +17,7 @@ const getCollection = (collection) => {
             // We need to add this to get a version of the snap that is located inside the server
             doc.data().createdAt && results.push({ ...doc.data(), id: doc.id })
         })
+        // Updates the value of the document with the most recent snapshot
         documents.value = results
         error.value = null
 
@@ -24,6 +26,7 @@ const getCollection = (collection) => {
         documents.value = null
         error.value = 'Could not fetch data'
     })
+
 
     return { documents, error }
 }
